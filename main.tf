@@ -7,13 +7,13 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  for_each = { for idx, subnet in var.public_subnets : idx => subnet }
+  count = length(var.public_subnets)
 
-  cidr_block = each.value.cidr_block
+  cidr_block = var.public_subnets[count.index].cidr_block
   vpc_id            = aws_vpc.main.id
-  availability_zone = each.value.availability_zone
+  availability_zone = var.public_subnets[count.index].availability_zone
 
   tags = {
-    Name = each.value.name
+    Name = var.public_subnets[count.index].name
   }
 }
