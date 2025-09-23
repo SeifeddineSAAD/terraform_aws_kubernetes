@@ -27,6 +27,9 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform unlock
+        run: terraform force-unlock -force ecccb7f5-ed89-d920-538c-b430d2702478
+
       - name: Terraform Plan
         run: terraform plan
 
