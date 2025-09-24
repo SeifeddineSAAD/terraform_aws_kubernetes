@@ -28,7 +28,7 @@ jobs:
         run: terraform init -upgrade 
 
       - name: Terraform unlock
-        run: terraform force-unlock -force a58a5ef1-2d5f-8f10-a7fb-c0a322d31dc0
+        run:  a58a5ef1-2d5f-8f10-a7fb-c0a322d31dc0
 
       - name: Terraform Plan
         run: terraform plan
