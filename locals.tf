@@ -1,4 +1,5 @@
 locals {
+  env = terraform.workspace
   public_sg_security_rules = { for id, rule in csvdecode(file("${path.module}/sg_rules.csv")) : 
     id => {
       sg_name    = rule.sg_name

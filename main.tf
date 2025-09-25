@@ -2,7 +2,7 @@ resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
 
   tags = {
-    Name = "${var.project_name}-vpc"
+    Name = "${var.project_name}-vpc-${local.env}"
   }
 }
 
@@ -15,7 +15,7 @@ resource "aws_subnet" "public_subnets" {
 
 
   tags = {
-    Name = each.value.name
+    Name = "${each.value.name}-${local.env}"
   }
 
   depends_on = [ aws_vpc.main ]
@@ -29,7 +29,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone = each.value.availability_zone
 
   tags = {
-    Name = each.value.name
+    Name = "${each.value.name}-${local.env}"
   }
 
   depends_on = [ aws_vpc.main ]
@@ -40,7 +40,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.project_name}-igw"
+    Name = "${var.project_name}-igw-${local.env}"
   }
 
   depends_on = [ aws_vpc.main ]
@@ -51,7 +51,7 @@ resource "aws_eip" "nat_eip" {
   domain = "vpc"
 
   tags = {
-    Name = "${var.project_name}-nat-eip-${each.key}"
+    Name = "${var.project_name}-nat-eip-${each.key}-${local.env}"
   }
 
   depends_on = [ aws_vpc.main, aws_subnet.public_subnets ]
@@ -63,7 +63,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public_subnets[each.key].id
 
   tags = {
-    Name = "${var.project_name}-nat-gw-${each.key}"
+    Name = "${var.project_name}-nat-gw-${each.key}-${local.env}"
   }
 
   depends_on = [aws_eip.nat_eip]
@@ -73,7 +73,7 @@ resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.project_name}-public-rt"
+    Name = "${var.project_name}-public-rt-${local.env}"
   }
 
   depends_on = [ aws_internet_gateway.main ]
@@ -97,7 +97,7 @@ resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.project_name}-private-rt"
+    Name = "${var.project_name}-private-rt-${local.env}"
   }
 
   depends_on = [ aws_nat_gateway.main]
@@ -122,7 +122,7 @@ resource "aws_security_group" "main-public" {
   description = "Main security group"
   vpc_id      = aws_vpc.main.id
   tags = {
-    Name = "${var.project_name}-sg-public"
+    Name = "${var.project_name}-sg-public-${local.env}"
   }
 }
 
@@ -131,7 +131,7 @@ resource "aws_security_group" "main-private" {
   description = "Main security group"
   vpc_id      = aws_vpc.main.id
   tags = {
-    Name = "${var.project_name}-sg-private"
+    Name = "${var.project_name}-sg-private-${local.env}"
   }
 }
 
